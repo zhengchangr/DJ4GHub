@@ -31,7 +31,8 @@ English: DJI 4G Manager is an independent open-source utility for macOS that tal
 | 短信通知 | ✅ | 新短信系统通知 |
 | eSIM Profile 管理 | ✅ | EID、Profile 列表、启用/停用/改名/删除（SGP.22 标准指令） |
 | AT 调试 | ✅ | 任意 AT 指令与常用指令快捷按钮 |
-| 单元测试 | ✅ | 短信编解码、AT 解析、eSIM 协议、网络解析（32 项） |
+| 软件内更新 | ✅ | 打开设置自动检查 GitHub 新版本，下载校验后一键替换重启 |
+| 单元测试 | ✅ | 短信编解码、AT 解析、eSIM 协议、网络解析、更新判断（35 项） |
 
 ## 支持的模块
 

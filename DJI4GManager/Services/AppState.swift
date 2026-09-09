@@ -50,6 +50,19 @@ final class AppState {
     }
     var atLog: [ATLogEntry] = []
 
+    /// 软件更新流程的当前状态。
+    enum UpdatePhase {
+        case idle
+        case checking
+        case found(AppUpdater.UpdateInfo)
+        case downloading
+        case downloaded(AppUpdater.UpdateInfo, URL)
+        case installing
+        case upToDate
+        case failed(String)
+    }
+    var updatePhase: UpdatePhase = .idle
+
     private let session = ModemSession()
     private var detectionTask: Task<Void, Never>?
     private var pathMonitor: NWPathMonitor?
@@ -95,6 +108,41 @@ final class AppState {
         startPathMonitor()
         detectionTask = Task { [weak self] in
             await self?.detectionLoop()
+        }
+    }
+
+    // MARK: - 软件更新
+
+    func checkForUpdates() async {
+        updatePhase = .checking
+        do {
+            let releases = try await AppUpdater.fetchReleases()
+            if let update = AppUpdater.pickUpdate(from: releases) {
+                updatePhase = .found(update)
+            } else {
+                updatePhase = .upToDate
+            }
+        } catch {
+            updatePhase = .failed("无法检查更新：\(error.localizedDescription)")
+        }
+    }
+
+    func downloadUpdate(_ update: AppUpdater.UpdateInfo) async {
+        updatePhase = .downloading
+        do {
+            let stagedApp = try await AppUpdater.prepareUpdate(update)
+            updatePhase = .downloaded(update, stagedApp)
+        } catch {
+            updatePhase = .failed("下载失败：\(error.localizedDescription)")
+        }
+    }
+
+    func installUpdate(_ update: AppUpdater.UpdateInfo, stagedApp: URL) {
+        do {
+            try AppUpdater.scheduleInstall(stagedApp: stagedApp)
+            updatePhase = .installing
+        } catch {
+            updatePhase = .failed("安装失败：\(error.localizedDescription)")
         }
     }
 

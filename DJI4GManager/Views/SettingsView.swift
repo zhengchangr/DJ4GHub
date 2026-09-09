@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 struct SettingsView: View {
@@ -40,14 +41,80 @@ struct SettingsView: View {
             }
 
             Section("关于") {
-                LabeledContent("版本", value: "0.2.0")
+                LabeledContent("版本", value: AppUpdater.currentVersion)
                 LabeledContent("目标系统", value: "macOS 15 及以上")
                 Label("非官方第三方项目，与 DJI、Quectel 无关。", systemImage: "info.circle")
                 Label("内置 libusb 1.0.30（LGPL-2.1-or-later）。", systemImage: "doc.text")
             }
+
+            Section("软件更新") {
+                switch appState.updatePhase {
+                case .idle:
+                    Button("检查更新") {
+                        Task { await appState.checkForUpdates() }
+                    }
+                case .checking:
+                    HStack(spacing: 8) {
+                        ProgressView().controlSize(.small)
+                        Text("正在检查更新…")
+                            .foregroundStyle(.secondary)
+                    }
+                case .found(let update):
+                    updateCard(update)
+                    Button("下载并安装") {
+                        Task { await appState.downloadUpdate(update) }
+                    }
+                case .downloading:
+                    HStack(spacing: 8) {
+                        ProgressView().controlSize(.small)
+                        Text("正在下载 \(AppUpdater.assetName)…")
+                            .foregroundStyle(.secondary)
+                    }
+                case .downloaded(let update, let stagedApp):
+                    Label("下载完成：\(update.name)", systemImage: "checkmark.circle")
+                    Button("立即安装并重启") {
+                        appState.installUpdate(update, stagedApp: stagedApp)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                            NSApp.terminate(nil)
+                        }
+                    }
+                case .installing:
+                    HStack(spacing: 8) {
+                        ProgressView().controlSize(.small)
+                        Text("正在安装，应用将自动重启…")
+                            .foregroundStyle(.secondary)
+                    }
+                case .upToDate:
+                    Label("已是最新版本（\(AppUpdater.currentVersion)）", systemImage: "checkmark.circle")
+                case .failed(let message):
+                    Label(message, systemImage: "exclamationmark.triangle")
+                        .foregroundStyle(.red)
+                    Button("重试") {
+                        Task { await appState.checkForUpdates() }
+                    }
+                }
+            }
         }
         .formStyle(.grouped)
         .frame(minWidth: 520, minHeight: 420)
+        .task {
+            if case .idle = appState.updatePhase {
+                await appState.checkForUpdates()
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func updateCard(_ update: AppUpdater.UpdateInfo) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Label("发现新版本：\(update.name)", systemImage: "arrow.down.circle")
+            if let notes = update.notes, !notes.isEmpty {
+                Text(notes)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(6)
+            }
+        }
     }
 }
 
