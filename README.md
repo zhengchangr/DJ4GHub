@@ -8,7 +8,7 @@
 
 状态 · 短信 · eSIM · USB 上网 · AT 调试
 
-[⬇️ 下载测试版](https://github.com/zhengchangr/dji-4g-manager/releases)
+[⬇️ 下载测试版](https://github.com/zhengchangr/HiddenTools/releases)
 
 </div>
 
