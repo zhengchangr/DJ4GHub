@@ -35,10 +35,10 @@ struct MenuBarView: View {
                 openWindow(id: "main")
                 NSApp.activate(ignoringOtherApps: true)
             } label: {
-                Label("打开 DJ4G Hub", systemImage: "macwindow")
+                Label("打开 DJI 4G Manager", systemImage: "macwindow")
             }
             Divider()
-            Button("退出 DJ4G Hub") {
+            Button("退出 DJI 4G Manager") {
                 NSApplication.shared.terminate(nil)
             }
         }

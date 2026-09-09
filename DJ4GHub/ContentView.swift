@@ -10,7 +10,7 @@ struct ContentView: View {
                 .navigationSplitViewColumnWidth(min: 190, ideal: 215, max: 270)
         } detail: {
             detail
-                .navigationTitle(selection?.title ?? "DJ4G Hub")
+                .navigationTitle(selection?.title ?? "DJI 4G Manager")
         }
         .task { appState.start() }
     }
