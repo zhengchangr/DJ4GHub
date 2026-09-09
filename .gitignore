@@ -1,0 +1,9 @@
+build/
+.build/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+.DS_Store
+dist/
+Resources/*.bak/
+带着地球去流浪·科幻电影中的硬核科学.pptx

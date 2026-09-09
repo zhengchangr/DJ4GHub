@@ -1,0 +1,107 @@
+import AppKit
+import SwiftUI
+
+/// 菜单栏快捷入口。
+struct MenuBarView: View {
+    @Environment(AppState.self) private var appState
+    @Environment(\.openWindow) private var openWindow
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 6) {
+                Circle()
+                    .fill(indicatorColor)
+                    .frame(width: 8, height: 8)
+                Text(phaseText)
+                    .font(.callout.weight(.medium))
+            }
+            Text(detailText)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            Divider()
+            Label("网络", systemImage: "network")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+            networkRow(title: "下载速度", value: NetworkMonitor.formattedSpeed(bytesPerSecond: appState.currentSpeedDown ?? 0), icon: "arrow.down")
+            networkRow(title: "上传速度", value: NetworkMonitor.formattedSpeed(bytesPerSecond: appState.currentSpeedUp ?? 0), icon: "arrow.up")
+            networkRow(title: "总使用流量", value: NetworkMonitor.formattedBytes(appState.network.sessionTotal), icon: "sum")
+            Text("本次运行累计 · 以运营商账单为准")
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
+
+            if let call = appState.currentCall {
+                Divider()
+                Label("来电：\(call.number)", systemImage: "phone.fill")
+                    .foregroundStyle(.green)
+                HStack {
+                    Button("接听") {
+                        Task { await appState.answerCall() }
+                    }
+                    .djGlassProminent()
+                    Button("挂断") {
+                        Task { await appState.hangUpCall() }
+                    }
+                    .djGlass()
+                }
+            }
+
+            Divider()
+            Button {
+                openWindow(id: "main")
+                NSApp.activate(ignoringOtherApps: true)
+            } label: {
+                Label("打开 DJ4G Hub", systemImage: "macwindow")
+            }
+            Divider()
+            Button("退出 DJ4G Hub") {
+                NSApplication.shared.terminate(nil)
+            }
+        }
+        .padding(10)
+        .frame(width: 250)
+    }
+
+    private var phaseText: String {
+        if appState.currentCall != nil { return "来电中" }
+        return switch appState.phase {
+        case .connected: "模块已连接"
+        case .switching: "模块切换中…"
+        case .failed: "连接失败"
+        case .searching: "等待模块…"
+        }
+    }
+
+    private var detailText: String {
+        if appState.status.usbNetMode >= 0 {
+            return appState.status.usbNetModeDescription
+        }
+        return appState.status.simState
+    }
+
+    private func networkRow(title: String, value: String, icon: String) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.caption)
+                .foregroundStyle(Color.accentColor)
+                .frame(width: 16)
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Spacer()
+            Text(value)
+                .font(.callout.weight(.medium))
+                .monospaced()
+        }
+    }
+
+    private var indicatorColor: Color {
+        if appState.currentCall != nil { return .green }
+        return switch appState.phase {
+        case .connected: .green
+        case .switching: .orange
+        case .failed: .red
+        case .searching: .secondary
+        }
+    }
+}

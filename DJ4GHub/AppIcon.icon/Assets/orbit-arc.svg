@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="arcGrad" gradientUnits="userSpaceOnUse" x1="169" y1="375" x2="928" y2="300">
+      <stop offset="0" stop-color="#57C8FF" stop-opacity="0.05"/>
+      <stop offset="0.45" stop-color="#7FDCFF" stop-opacity="0.85"/>
+      <stop offset="0.72" stop-color="#C8F2FF" stop-opacity="1"/>
+      <stop offset="1" stop-color="#7FDCFF" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="nodeGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.35" stop-color="#A9E8FF"/>
+      <stop offset="1" stop-color="#57C8FF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <g transform="translate(512 512) scale(1.25) translate(-512 -512)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 169 375 C 169 120, 855 120, 855 375 C 855 350, 900 330, 928 300"
+          stroke="url(#arcGrad)" stroke-width="46" opacity="0.10"/>
+    <path d="M 169 375 C 169 120, 855 120, 855 375 C 855 350, 900 330, 928 300"
+          stroke="url(#arcGrad)" stroke-width="20" opacity="0.35"/>
+    <path d="M 169 375 C 169 120, 855 120, 855 375 C 855 350, 900 330, 928 300"
+          stroke="#E6F7FF" stroke-width="7" opacity="0.85"/>
+  </g>
+  <g transform="translate(512 512) scale(1.25) translate(-512 -512)">
+    <circle cx="899" cy="318" r="54" fill="url(#nodeGlow)"/>
+    <circle cx="899" cy="318" r="18" fill="#FFFFFF"/>
+  </g>
+</svg>
