@@ -7,31 +7,31 @@
 	objects = {
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		A1000000000000000000000F /* DJ4GHub */ = {
+		A1000000000000000000000F /* DJI4GManager */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = DJ4GHub;
+			path = DJI4GManager;
 			sourceTree = "<group>";
 		};
-		A10000000000000000000020 /* DJ4GHubTests */ = {
+		A10000000000000000000020 /* DJI4GManagerTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = DJ4GHubTests;
+			path = DJI4GManagerTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFileReference section */
-		A10000000000000000000004 /* DJ4GHub.app */ = {
+		A10000000000000000000004 /* DJI4GManager.app */ = {
 			isa = PBXFileReference;
 			explicitFileType = wrapper.application;
 			includeInIndex = 0;
-			path = DJ4GHub.app;
+			path = DJI4GManager.app;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		A10000000000000000000027 /* DJ4GHubTests.xctest */ = {
+		A10000000000000000000027 /* DJI4GManagerTests.xctest */ = {
 			isa = PBXFileReference;
 			explicitFileType = wrapper.cfbundle;
 			includeInIndex = 0;
-			path = DJ4GHubTests.xctest;
+			path = DJI4GManagerTests.xctest;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXFileReference section */
@@ -46,7 +46,7 @@
 			containerPortal = A10000000000000000000001 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = A10000000000000000000005;
-			remoteInfo = DJ4GHub;
+			remoteInfo = DJI4GManager;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -72,8 +72,8 @@
 		A10000000000000000000003 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A10000000000000000000004 /* DJ4GHub.app */,
-				A10000000000000000000027 /* DJ4GHubTests.xctest */,
+				A10000000000000000000004 /* DJI4GManager.app */,
+				A10000000000000000000027 /* DJI4GManagerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -81,8 +81,8 @@
 		A10000000000000000000002 = {
 			isa = PBXGroup;
 			children = (
-				A1000000000000000000000F /* DJ4GHub */,
-				A10000000000000000000020 /* DJ4GHubTests */,
+				A1000000000000000000000F /* DJI4GManager */,
+				A10000000000000000000020 /* DJI4GManagerTests */,
 				A10000000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,9 +90,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A10000000000000000000005 /* DJ4GHub */ = {
+		A10000000000000000000005 /* DJI4GManager */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A1000000000000000000000C /* Build configuration list for PBXNativeTarget "DJ4GHub" */;
+			buildConfigurationList = A1000000000000000000000C /* Build configuration list for PBXNativeTarget "DJI4GManager" */;
 			buildPhases = (
 				A10000000000000000000006 /* Sources */,
 				A10000000000000000000007 /* Frameworks */,
@@ -103,19 +103,19 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				A1000000000000000000000F /* DJ4GHub */,
+				A1000000000000000000000F /* DJI4GManager */,
 			);
-			name = DJ4GHub;
+			name = DJI4GManager;
 			packageProductDependencies = (
 				A10000000000000000000011 /* CLibusb */,
 			);
-			productName = DJ4GHub;
-			productReference = A10000000000000000000004 /* DJ4GHub.app */;
+			productName = DJI4GManager;
+			productReference = A10000000000000000000004 /* DJI4GManager.app */;
 			productType = "com.apple.product-type.application";
 		};
-		A10000000000000000000021 /* DJ4GHubTests */ = {
+		A10000000000000000000021 /* DJI4GManagerTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A10000000000000000000028 /* Build configuration list for PBXNativeTarget "DJ4GHubTests" */;
+			buildConfigurationList = A10000000000000000000028 /* Build configuration list for PBXNativeTarget "DJI4GManagerTests" */;
 			buildPhases = (
 				A10000000000000000000022 /* Sources */,
 				A10000000000000000000023 /* Frameworks */,
@@ -127,11 +127,11 @@
 				A10000000000000000000025 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				A10000000000000000000020 /* DJ4GHubTests */,
+				A10000000000000000000020 /* DJI4GManagerTests */,
 			);
-			name = DJ4GHubTests;
-			productName = DJ4GHubTests;
-			productReference = A10000000000000000000027 /* DJ4GHubTests.xctest */;
+			name = DJI4GManagerTests;
+			productName = DJI4GManagerTests;
+			productReference = A10000000000000000000027 /* DJI4GManagerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -152,7 +152,7 @@
 					};
 				};
 			};
-			buildConfigurationList = A10000000000000000000009 /* Build configuration list for PBXProject "DJ4GHub" */;
+			buildConfigurationList = A10000000000000000000009 /* Build configuration list for PBXProject "DJI4GManager" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -169,8 +169,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A10000000000000000000005 /* DJ4GHub */,
-				A10000000000000000000021 /* DJ4GHubTests */,
+				A10000000000000000000005 /* DJI4GManager */,
+				A10000000000000000000021 /* DJI4GManagerTests */,
 			);
 		};
 /* End PBXProject section */
@@ -212,7 +212,7 @@
 /* Begin PBXTargetDependency section */
 		A10000000000000000000025 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = A10000000000000000000005 /* DJ4GHub */;
+			target = A10000000000000000000005 /* DJI4GManager */;
 			targetProxy = A10000000000000000000026 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -290,7 +290,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 0.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dj4ghub.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dji4gmanager.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -320,7 +320,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 0.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dj4ghub.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dji4gmanager.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -342,11 +342,11 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 0.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dj4ghub.app.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dji4gmanager.app.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DJ4GHub.app/Contents/MacOS/DJ4GHub";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DJI4GManager.app/Contents/MacOS/DJI4GManager";
 			};
 			name = Debug;
 		};
@@ -365,18 +365,18 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 0.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dj4ghub.app.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dji4gmanager.app.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DJ4GHub.app/Contents/MacOS/DJ4GHub";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DJI4GManager.app/Contents/MacOS/DJI4GManager";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A10000000000000000000009 /* Build configuration list for PBXProject "DJ4GHub" */ = {
+		A10000000000000000000009 /* Build configuration list for PBXProject "DJI4GManager" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A1000000000000000000000A /* Debug */,
@@ -385,7 +385,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A1000000000000000000000C /* Build configuration list for PBXNativeTarget "DJ4GHub" */ = {
+		A1000000000000000000000C /* Build configuration list for PBXNativeTarget "DJI4GManager" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A1000000000000000000000D /* Debug */,
@@ -394,7 +394,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A10000000000000000000028 /* Build configuration list for PBXNativeTarget "DJ4GHubTests" */ = {
+		A10000000000000000000028 /* Build configuration list for PBXNativeTarget "DJI4GManagerTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A10000000000000000000029 /* Debug */,

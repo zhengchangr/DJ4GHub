@@ -38,7 +38,7 @@ protocol ModemTransport: AnyObject {
 /// 保证所有 USB / AT 操作都在同一条串行队列上执行，
 /// 避免 libusb 上下文被多线程并发访问。
 final class ModemSession {
-    private let queue = DispatchQueue(label: "com.dj4ghub.modem.session")
+    private let queue = DispatchQueue(label: "com.dji4gmanager.modem.session")
     private var transport: (any ModemTransport)?
 
     var isConnected: Bool {

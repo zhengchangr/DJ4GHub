@@ -1,5 +1,5 @@
 import Foundation
-@testable import DJ4GHub
+@testable import DJI4GManager
 
 /// 测试用模拟通道：返回一组固定的真实格式响应，用于测试 AT 解析逻辑。
 final class DemoTransport: ModemTransport {

@@ -1,5 +1,5 @@
 import XCTest
-@testable import DJ4GHub
+@testable import DJI4GManager
 
 final class NetworkMonitorTests: XCTestCase {
 

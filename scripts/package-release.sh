@@ -1,5 +1,5 @@
 #!/bin/sh
-# DJ4G Hub release packaging script
+# DJI 4G Manager release packaging script
 #
 # Local test package (default):
 #   ./scripts/package-release.sh
@@ -8,17 +8,17 @@
 #   IDENTITY="Developer ID Application: Your Name (TEAMID)" ./scripts/package-release.sh
 #
 # Notarization (requires developer account):
-#   xcrun notarytool submit dist/DJ4GHub-Release/DJ4GHub-Release.zip \
+#   xcrun notarytool submit dist/DJI4GManager-Release/DJI4GManager-Release.zip \
 #     --keychain-profile "notary" --wait
-#   xcrun stapler staple dist/DJ4GHub-Release/DJ4GHub-Release.zip
+#   xcrun stapler staple dist/DJI4GManager-Release/DJI4GManager-Release.zip
 set -eu
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 CONFIGURATION=${CONFIGURATION:-Release}
 IDENTITY=${IDENTITY:--}
 DERIVED="$ROOT/build/DerivedData"
-APP="$DERIVED/Build/Products/$CONFIGURATION/DJ4GHub.app"
-OUT="$ROOT/dist/DJ4GHub-$CONFIGURATION"
+APP="$DERIVED/Build/Products/$CONFIGURATION/DJI4GManager.app"
+OUT="$ROOT/dist/DJI4GManager-$CONFIGURATION"
 DEVELOPER_DIR="${DEVELOPER_DIR:-$(xcode-select -p)}"
 
 rm -rf "$OUT"
@@ -26,8 +26,8 @@ mkdir -p "$OUT"
 
 echo "==> Building $CONFIGURATION"
 DEVELOPER_DIR="$DEVELOPER_DIR" xcodebuild \
-  -project "$ROOT/DJ4GHub.xcodeproj" \
-  -scheme DJ4GHub \
+  -project "$ROOT/DJI4GManager.xcodeproj" \
+  -scheme DJI4GManager \
   -configuration "$CONFIGURATION" \
   -derivedDataPath "$DERIVED" \
   MACOSX_DEPLOYMENT_TARGET=15.0 \
@@ -39,11 +39,11 @@ echo "==> Copying app"
 cp -R "$APP" "$OUT/"
 
 echo "==> Signing (${IDENTITY})"
-codesign --force --deep --sign "${IDENTITY}" "$OUT/DJ4GHub.app"
+codesign --force --deep --sign "${IDENTITY}" "$OUT/DJI4GManager.app"
 
 cd "$OUT"
-zip -rq "DJ4GHub-$CONFIGURATION.zip" DJ4GHub.app
-shasum -a 256 "DJ4GHub-$CONFIGURATION.zip" > "DJ4GHub-$CONFIGURATION.zip.sha256"
+zip -rq "DJI4GManager-$CONFIGURATION.zip" DJI4GManager.app
+shasum -a 256 "DJI4GManager-$CONFIGURATION.zip" > "DJI4GManager-$CONFIGURATION.zip.sha256"
 
-echo "==> Done: $OUT/DJ4GHub-$CONFIGURATION.zip"
-cat "DJ4GHub-$CONFIGURATION.zip.sha256"
+echo "==> Done: $OUT/DJI4GManager-$CONFIGURATION.zip"
+cat "DJI4GManager-$CONFIGURATION.zip.sha256"

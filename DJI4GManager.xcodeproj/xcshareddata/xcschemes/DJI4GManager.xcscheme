@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A10000000000000000000005"
-               BuildableName = "DJ4GHub.app"
-               BlueprintName = "DJ4GHub"
-               ReferencedContainer = "container:DJ4GHub.xcodeproj">
+               BuildableName = "DJI4GManager.app"
+               BlueprintName = "DJI4GManager"
+               ReferencedContainer = "container:DJI4GManager.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,9 +35,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A10000000000000000000021"
-               BuildableName = "DJ4GHubTests.xctest"
-               BlueprintName = "DJ4GHubTests"
-               ReferencedContainer = "container:DJ4GHub.xcodeproj">
+               BuildableName = "DJI4GManagerTests.xctest"
+               BlueprintName = "DJI4GManagerTests"
+               ReferencedContainer = "container:DJI4GManager.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -57,9 +57,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A10000000000000000000005"
-            BuildableName = "DJ4GHub.app"
-            BlueprintName = "DJ4GHub"
-            ReferencedContainer = "container:DJ4GHub.xcodeproj">
+            BuildableName = "DJI4GManager.app"
+            BlueprintName = "DJI4GManager"
+            ReferencedContainer = "container:DJI4GManager.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -74,9 +74,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A10000000000000000000005"
-            BuildableName = "DJ4GHub.app"
-            BlueprintName = "DJ4GHub"
-            ReferencedContainer = "container:DJ4GHub.xcodeproj">
+            BuildableName = "DJI4GManager.app"
+            BlueprintName = "DJI4GManager"
+            ReferencedContainer = "container:DJI4GManager.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

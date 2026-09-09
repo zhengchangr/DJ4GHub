@@ -203,7 +203,7 @@ final class AppState {
                 self?.network.pathStatus = text
             }
         }
-        monitor.start(queue: DispatchQueue(label: "com.dj4ghub.pathmonitor"))
+        monitor.start(queue: DispatchQueue(label: "com.dji4gmanager.pathmonitor"))
         pathMonitor = monitor
     }
 

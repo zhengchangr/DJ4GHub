@@ -1,5 +1,5 @@
 import Foundation
-@testable import DJ4GHub
+@testable import DJI4GManager
 
 /// 测试用传输通道：按指令返回预设响应，未配置的指令一律返回 OK。
 final class StaticTransport: ModemTransport {

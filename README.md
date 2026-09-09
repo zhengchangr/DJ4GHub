@@ -23,7 +23,7 @@ English: DJI 4G Manager is an independent open-source utility for macOS that tal
 | 功能 | 状态 | 说明 |
 |---|---|---|
 | 模块自动识别 | ✅ | 自动发现一代模块（USB 2ca3:4006），热插拔自动恢复 |
-| 二代模块识别 | ✅ | 识别 2ca3:4009，提示“仅网卡模式” |
+| 二代模块识别 | ✅ 上网能力待真机验证 | 识别 2ca3:4009，提示“仅网卡模式” |
 | 模块状态 | ✅ | 运营商、信号、网络制式、SIM 状态、IMEI、号码、IP |
 | USB 上网模式切换 | ✅ | 模式 0（管理）/ 1（上网）/ 2 / 3，切换后自动重启模块 |
 | 实时流量监控 | ✅ | 网卡、默认路由、实时上/下行速度、本次会话总流量 |
@@ -44,9 +44,9 @@ English: DJI 4G Manager is an independent open-source utility for macOS that tal
 
 前往 [Releases](https://github.com/zhengchangr/dji-4g-manager/releases) 下载最新版本。
 
-1. 解压 `DJ4GHub-Release.zip`（文件名沿用工程代号，不影响使用）；
-2. 将 `DJ4GHub.app` 拖入“应用程序”或直接双击运行；
-3. 若 macOS 提示“无法验证开发者”，请右键 `DJ4GHub.app` → 打开。
+1. 解压 `DJI4GManager-Release.zip`；
+2. 将 `DJI4GManager.app` 拖入“应用程序”或直接双击运行；
+3. 若 macOS 提示“无法验证开发者”，请右键 `DJI4GManager.app` → 打开。
 
 > 当前为测试版：使用临时签名、未做 Apple Developer ID 公证，建议在测试机上使用。
 
@@ -71,14 +71,14 @@ English: DJI 4G Manager is an independent open-source utility for macOS that tal
 
 步骤：
 
-1. 打开 `DJ4GHub.xcodeproj`（工程代号沿用旧名）；
-2. 选择 `DJ4GHub` scheme 与本机（My Mac）；
+1. 打开 `DJI4GManager.xcodeproj`；
+2. 选择 `DJI4GManager` scheme 与本机（My Mac）；
 3. Command-R 运行。
 
 运行测试：
 
 ```
-xcodebuild -project DJ4GHub.xcodeproj -scheme DJ4GHub test
+xcodebuild -project DJI4GManager.xcodeproj -scheme DJI4GManager test
 ```
 
 项目内置 libusb 1.0.30（已随源码编译进应用），无需 Homebrew 或任何外部依赖。
