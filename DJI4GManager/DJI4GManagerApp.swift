@@ -15,7 +15,7 @@ struct DJI4GManagerApp: App {
     @State private var appState = AppState()
 
     var body: some Scene {
-        WindowGroup(id: "main") {
+        Window("DJI 4G Manager", id: "main") {
             ContentView()
                 .environment(appState)
                 .frame(minWidth: 1000, minHeight: 640)
