@@ -16,7 +16,7 @@ struct SettingsView: View {
                     get: { appState.autoPollSMS },
                     set: { appState.autoPollSMS = $0 }
                 ))
-                Toggle("来电与短信系统通知", isOn: Binding(
+                Toggle("新短信系统通知", isOn: Binding(
                     get: { appState.notificationsEnabled },
                     set: { appState.notificationsEnabled = $0 }
                 ))
@@ -34,7 +34,7 @@ struct SettingsView: View {
                 Label("上网模式切换后模块会重新枚举，属正常现象。", systemImage: "lightbulb")
                 Label("上网时建议检查 Baiwang 网络服务的代理设置。", systemImage: "network")
                 Label("短信与 eSIM 需在管理模式（USB 模式 0）下使用。", systemImage: "simcard")
-                Label("来电提醒通过 AT+CLCC 轮询实现，可在菜单栏快速接听/挂断。", systemImage: "phone")
+                Label("此模块为数据向设计，不支持通话语音，未包含来电功能。", systemImage: "phone.slash")
                 Label("请留意 SIM 套餐、漫游资费与流量上限。", systemImage: "exclamationmark.triangle")
             }
 

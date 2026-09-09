@@ -15,11 +15,10 @@
 | 短信收发 | 已实现 | PDU 编码（GSM 7-bit / UCS2）、收件箱、删除 |
 | eSIM | 已实现 | EID、Profile 列表、启用/停用/改名/删除（SGP.22 标准指令） |
 | AT 调试 | 已实现 | 任意 AT 指令、常用指令快捷按钮 |
-| 来电提醒 | 已实现 | AT+CLCC 轮询来电，系统通知 + 接听/挂断 |
 | 短信通知 | 已实现 | 新短信系统通知 |
-| 菜单栏 | 已实现 | 状态、快捷操作、来电处理 |
+| 菜单栏 | 已实现 | 状态、快捷操作 |
 | 菜单栏网络监控 | 已实现 | 实时上/下行速度、本次运行总流量 |
-| 单元测试 | 已实现 | 短信编解码、AT 解析、eSIM 协议、网络解析（19 项） |
+| 单元测试 | 已实现 | 短信编解码、AT 解析、eSIM 协议、网络解析（30 项） |
 
 ## 构建
 
@@ -57,12 +56,12 @@ xcodebuild -project DJ4GHub.xcodeproj -scheme DJ4GHub test
 - 网络：读取 `ifconfig` / `route` / `netstat -ibn` 识别模块网卡、默认出口与流量。
 - 界面：SwiftUI `NavigationSplitView`；玻璃样式通过兼容层自动启用——macOS 26+ 用 `glassEffect`，旧系统回退到普通磨砂材质。
 - eSIM：SGP.22 ES10c 命令（STORE DATA 0x80/0xE2 + TLV），参考 lpac 实现。
-- 通话：`AT+CLCC` 轮询 + `ATA` / `AT+CHUP`。
+- 模块为数据向设计，不支持通话语音，因此不包含来电功能。
 
 ## 路线图
 
 - [x] eSIM Profile 管理（SGP.22）
-- [x] 来电 / 短信系统通知
+- [x] 短信系统通知
 - [x] 菜单栏快捷入口
 - [x] 应用图标（用户提供的矢量图标）
 - [ ] 真机验证 USB/AT 通信与模式切换

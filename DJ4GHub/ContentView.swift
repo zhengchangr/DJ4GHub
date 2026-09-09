@@ -50,33 +50,6 @@ struct ContentView: View {
     @ViewBuilder
     private var detail: some View {
         VStack(spacing: 0) {
-            if let call = appState.currentCall {
-                HStack(spacing: 12) {
-                    Image(systemName: "phone.fill")
-                        .foregroundStyle(.green)
-                        .font(.title3)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(call.number)
-                            .font(.callout.weight(.semibold))
-                        Text(call.stateDescription)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                    Spacer()
-                    Button("接听") {
-                        Task { await appState.answerCall() }
-                    }
-                    .djGlassProminent()
-                    Button("挂断") {
-                        Task { await appState.hangUpCall() }
-                    }
-                    .djGlass()
-                }
-                .padding(12)
-                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                .padding([.horizontal, .top], 16)
-            }
-
             if let error = appState.lastError {
                 HStack(spacing: 8) {
                     Image(systemName: "exclamationmark.triangle.fill")

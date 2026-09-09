@@ -37,7 +37,6 @@ struct DJ4GHubApp: App {
     }
 
     private var menuBarIcon: String {
-        if appState.currentCall != nil { return "phone.fill" }
         return switch appState.phase {
         case .connected: "antenna.radiowaves.left.and.right"
         case .switching: "arrow.triangle.2.circlepath"

@@ -30,22 +30,6 @@ struct MenuBarView: View {
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
 
-            if let call = appState.currentCall {
-                Divider()
-                Label("来电：\(call.number)", systemImage: "phone.fill")
-                    .foregroundStyle(.green)
-                HStack {
-                    Button("接听") {
-                        Task { await appState.answerCall() }
-                    }
-                    .djGlassProminent()
-                    Button("挂断") {
-                        Task { await appState.hangUpCall() }
-                    }
-                    .djGlass()
-                }
-            }
-
             Divider()
             Button {
                 openWindow(id: "main")
@@ -63,7 +47,6 @@ struct MenuBarView: View {
     }
 
     private var phaseText: String {
-        if appState.currentCall != nil { return "来电中" }
         return switch appState.phase {
         case .connected: "模块已连接"
         case .switching: "模块切换中…"
@@ -96,7 +79,6 @@ struct MenuBarView: View {
     }
 
     private var indicatorColor: Color {
-        if appState.currentCall != nil { return .green }
         return switch appState.phase {
         case .connected: .green
         case .switching: .orange

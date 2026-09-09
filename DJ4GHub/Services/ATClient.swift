@@ -191,39 +191,6 @@ enum ATClient {
         return try transport.command(trimmed, timeout: 15)
     }
 
-    // MARK: - 通话解析
-
-    /// 解析 AT+CLCC 响应中的来电（语音、呼入方向）。
-    static func parseCLCC(_ response: String) -> [PhoneCall] {
-        let pattern = ##"\+CLCC:\s*(\d+),(\d+),(\d+),(\d+),(\d+)(?:,"([^"]*)",(\d+))?"##
-        guard let regex = try? NSRegularExpression(pattern: pattern) else { return [] }
-        let range = NSRange(response.startIndex..., in: response)
-        var result: [PhoneCall] = []
-        for match in regex.matches(in: response, range: range) {
-            guard let modeRange = Range(match.range(at: 4), in: response),
-                  response[modeRange] == "0" else { continue }
-            guard let directionRange = Range(match.range(at: 2), in: response),
-                  response[directionRange] == "1" else { continue }
-            guard let stateRange = Range(match.range(at: 3), in: response) else { continue }
-            let state: PhoneCall.CallState
-            switch response[stateRange] {
-            case "4": state = .incoming
-            case "5": state = .waiting
-            case "0": state = .active
-            default: continue
-            }
-            let number: String
-            if match.range(at: 6).location != NSNotFound,
-               let numberRange = Range(match.range(at: 6), in: response) {
-                number = String(response[numberRange])
-            } else {
-                number = "未知号码"
-            }
-            result.append(PhoneCall(number: number, state: state, startedAt: Date()))
-        }
-        return result
-    }
-
     // MARK: - 解析工具
 
     private static func query(_ transport: any ModemTransport, _ command: String, prefix: String) -> String {

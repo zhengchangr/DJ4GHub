@@ -55,10 +55,6 @@ final class DemoTransport: ModemTransport {
             return demoCMGLResponse
         case "AT+CFUN=1,1":
             return "OK"
-        case "AT+CLCC":
-            return "OK"
-        case "AT+CHUP", "ATA", "AT+CLIP=1":
-            return "OK"
         default:
             if trimmed.hasPrefix("AT+QCFG=\"USBNET\","), let value = trimmed.last, let mode = Int(String(value)) {
                 usbNetMode = mode

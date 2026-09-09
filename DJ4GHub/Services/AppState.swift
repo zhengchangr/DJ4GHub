@@ -21,7 +21,6 @@ final class AppState {
     var networkServices: [NetworkServiceInfo] = []
     var messages: [SMSMessage] = []
     var esim = ESIMState()
-    var currentCall: PhoneCall?
     var lastError: String?
     var isRefreshing = false
     var autoPollSMS = true
@@ -103,7 +102,6 @@ final class AppState {
                     await connect()
                 }
                 await refreshAll()
-                await pollCalls()
             } else {
                 if session.isConnected {
                     await session.close()
@@ -112,7 +110,6 @@ final class AppState {
                     phase = .searching
                     status = ModuleStatus()
                     network = NetworkSnapshot()
-                    currentCall = nil
                     lastCounters = nil
                 }
             }
@@ -262,51 +259,6 @@ final class AppState {
         do {
             try await session.run { try ATClient.deleteSMS(transport: $0, index: index) }
             messages.removeAll { $0.id == index }
-        } catch {
-            lastError = error.localizedDescription
-        }
-    }
-
-    // MARK: - 通话
-
-    private func pollCalls() async {
-        guard isConnected else { return }
-        do {
-            let raw = try await session.run { try ATClient.execute(transport: $0, command: "AT+CLCC") }
-            applyCallState(ATClient.parseCLCC(raw))
-        } catch {
-            // 轮询失败时保持现状
-        }
-    }
-
-    private func applyCallState(_ calls: [PhoneCall]) {
-        if let incoming = calls.first {
-            if currentCall == nil || currentCall?.number != incoming.number {
-                if notificationsEnabled {
-                    postNotification(title: "来电", body: "来自 \(incoming.number)")
-                }
-            }
-            currentCall = incoming
-        } else {
-            currentCall = nil
-        }
-    }
-
-    func answerCall() async {
-        guard isConnected else { return }
-        do {
-            _ = try await session.run { try ATClient.execute(transport: $0, command: "ATA") }
-            currentCall = nil
-        } catch {
-            lastError = error.localizedDescription
-        }
-    }
-
-    func hangUpCall() async {
-        guard isConnected else { return }
-        do {
-            _ = try await session.run { try ATClient.execute(transport: $0, command: "AT+CHUP") }
-            currentCall = nil
         } catch {
             lastError = error.localizedDescription
         }

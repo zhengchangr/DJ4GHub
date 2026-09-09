@@ -43,31 +43,6 @@ final class ATClientTests: XCTestCase {
         XCTAssertEqual(status.imei, "861234567890123")
     }
 
-    func testParseCLCCIncomingCall() {
-        let response = "AT+CLCC\r\n+CLCC: 1,1,4,0,0,\"13800138000\",129\r\nOK"
-        let calls = ATClient.parseCLCC(response)
-        XCTAssertEqual(calls.count, 1)
-        XCTAssertEqual(calls[0].number, "13800138000")
-        XCTAssertEqual(calls[0].state, .incoming)
-    }
-
-    func testParseCLCCWaitingCall() {
-        let response = "+CLCC: 2,1,5,0,0,\"+8613900139000\",145\r\nOK"
-        let calls = ATClient.parseCLCC(response)
-        XCTAssertEqual(calls.count, 1)
-        XCTAssertEqual(calls[0].state, .waiting)
-    }
-
-    func testParseCLCCIgnoresDataSession() {
-        let response = "+CLCC: 1,1,4,1,0,\"data\",129\r\nOK"
-        XCTAssertTrue(ATClient.parseCLCC(response).isEmpty)
-    }
-
-    func testParseCLCCIgnoresOutgoing() {
-        let response = "+CLCC: 1,0,2,0,0,\"13800138000\",129\r\nOK"
-        XCTAssertTrue(ATClient.parseCLCC(response).isEmpty)
-    }
-
     func testParseCNUMQuotedWithCRLF() {
         let response = "\r\n+CNUM: \"My Number\",\"+8613800138000\",145\r\n\r\nOK\r\n"
         let status = try! ATClient.refreshStatus(transport: StaticTransport(responses: ["AT+CNUM": response]))
