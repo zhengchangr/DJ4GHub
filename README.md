@@ -1,5 +1,3 @@
-# DJ4G Hub
-
 面向大疆一代 4G 模块的 macOS 管理软件。原生 SwiftUI，兼容 macOS 15 及以上；macOS 26+ 使用 Apple 官方 Liquid Glass 玻璃设计，旧系统自动回退为普通样式。
 
 > 非官方第三方项目，与 DJI、Quectel 及运营商无隶属关系。
@@ -44,10 +42,12 @@ xcodebuild -project DJ4GHub.xcodeproj -scheme DJ4GHub test
 
 ## 使用
 
-1. 将 SIM 卡插入大疆一代 4G 模块。
+1. 将 SIM 卡插入大疆一代 4G 模块并打开 DJ4GHub：
+   <img width="600" alt="截屏2026-09-09 13 29 51" src="https://github.com/user-attachments/assets/a06ff1e9-1fec-4e4e-977c-27843735d644" />
 2. 使用支持数据传输的 USB-C 线连接模块与 Mac。
-3. 启动应用后自动识别模块；侧边栏可切换功能页面。
-4. 「上网」页选择模式 1（USB 上网）并应用，模块重启后系统网络设置会出现 Baiwang 网卡。
+   <img width="600" alt="截屏2026-09-09 13 29 04" src="https://github.com/user-attachments/assets/69ddf80f-f1dd-44a5-bd41-a75df7b203fa" />
+3. 「上网」页选择模式 1（USB 上网）并应用，模块重启后系统网络设置会出现 Baiwang 网卡：
+   <img width="600" alt="截屏2026-09-09 13 33 35" src="https://github.com/user-attachments/assets/94341995-8153-4d57-ad28-247245fa1d06" />
 
 ## 技术说明
 
@@ -64,7 +64,7 @@ xcodebuild -project DJ4GHub.xcodeproj -scheme DJ4GHub test
 - [x] 短信系统通知
 - [x] 菜单栏快捷入口
 - [x] 应用图标（用户提供的矢量图标）
-- [ ] 真机验证 USB/AT 通信与模式切换
+- [x] 真机验证 USB/AT 通信与模式切换
 - [ ] eSIM Profile 下载（SM-DP+ 激活码）
 - [ ] 开发者签名（Developer ID + 公证）
 
