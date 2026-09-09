@@ -11,6 +11,7 @@ final class AppState {
         case searching
         case connected
         case switching
+        case gen2Only
         case failed(String)
     }
 
@@ -66,6 +67,11 @@ final class AppState {
         phase == .connected
     }
 
+    /// 是否只检测到二代模块（无一代管理通道）。
+    var isGen2Only: Bool {
+        phase == .gen2Only
+    }
+
     /// 页面展示的号码：优先模块读到的，其次手动填写的。
     var displayPhoneNumber: String {
         status.phoneNumber.isEmpty ? manualPhoneNumber : status.phoneNumber
@@ -96,12 +102,22 @@ final class AppState {
 
     private func detectionLoop() async {
         while !Task.isCancelled {
-            let present = LibusbTransport.isDevicePresent()
-            if present {
+            let generations = LibusbTransport.presentGenerations()
+            if generations.contains(.gen1) {
                 if !session.isConnected {
                     await connect()
                 }
                 await refreshAll()
+            } else if generations.contains(.gen2) {
+                if session.isConnected {
+                    await session.close()
+                }
+                if phase != .gen2Only {
+                    phase = .gen2Only
+                    status = ModuleStatus()
+                    lastError = nil
+                }
+                refreshNetworkState()
             } else {
                 if session.isConnected {
                     await session.close()
@@ -110,6 +126,7 @@ final class AppState {
                     phase = .searching
                     status = ModuleStatus()
                     network = NetworkSnapshot()
+                    networkServices = []
                     lastCounters = nil
                 }
             }
@@ -139,14 +156,19 @@ final class AppState {
             lastError = error.localizedDescription
         }
 
-        network = NetworkMonitor.snapshot()
-        networkServices = NetworkMonitor.services()
-        updateSpeeds()
+        refreshNetworkState()
 
         if autoPollSMS, Date().timeIntervalSince(lastSMSPoll) > 15 {
             lastSMSPoll = Date()
             await refreshSMS()
         }
+    }
+
+    /// 刷新模块网卡、系统网络服务与实时流量。
+    private func refreshNetworkState() {
+        network = NetworkMonitor.snapshot()
+        networkServices = NetworkMonitor.services()
+        updateSpeeds()
     }
 
     private func updateSpeeds() {

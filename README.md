@@ -1,3 +1,5 @@
+# DJ4G Hub
+
 面向大疆一代 4G 模块的 macOS 管理软件。原生 SwiftUI，兼容 macOS 15 及以上；macOS 26+ 使用 Apple 官方 Liquid Glass 玻璃设计，旧系统自动回退为普通样式。
 
 > 非官方第三方项目，与 DJI、Quectel 及运营商无隶属关系。
@@ -7,6 +9,7 @@
 | 功能 | 状态 | 说明 |
 |---|---|---|
 | 模块自动识别 | 已实现 | 自动发现 USB 2ca3:4006，热插拔轮询 |
+| 二代模块识别 | 已实现（上网能力待真机验证） | 识别 USB 2ca3:4009，提示管理口封闭；若 macOS 识别出网卡可作纯网卡使用 |
 | 模块状态 | 已实现 | 运营商、信号、网络制式、SIM 状态、USB 模式、IMEI、号码、IP |
 | USB 上网模式切换 | 已实现 | 模式 0（管理）/ 1（上网）/ 2 / 3，切换后自动重启模块 |
 | 网络监控 | 已实现 | 网卡、默认路由、实时速度、本次会话流量 |
@@ -16,7 +19,7 @@
 | 短信通知 | 已实现 | 新短信系统通知 |
 | 菜单栏 | 已实现 | 状态、快捷操作 |
 | 菜单栏网络监控 | 已实现 | 实时上/下行速度、本次运行总流量 |
-| 单元测试 | 已实现 | 短信编解码、AT 解析、eSIM 协议、网络解析（30 项） |
+| 单元测试 | 已实现 | 短信编解码、AT 解析、eSIM 协议、网络解析（32 项） |
 
 ## 构建
 
@@ -46,8 +49,10 @@ xcodebuild -project DJ4GHub.xcodeproj -scheme DJ4GHub test
    <img width="600" alt="截屏2026-09-09 13 29 51" src="https://github.com/user-attachments/assets/a06ff1e9-1fec-4e4e-977c-27843735d644" />
 2. 使用支持数据传输的 USB-C 线连接模块与 Mac。
    <img width="600" alt="截屏2026-09-09 13 29 04" src="https://github.com/user-attachments/assets/69ddf80f-f1dd-44a5-bd41-a75df7b203fa" />
-3. 「上网」页选择模式 1（USB 上网）并应用，模块重启后系统网络设置会出现 Baiwang 网卡：
+3. 启动应用后自动识别模块；侧边栏可切换功能页面。
+4. 「上网」页选择模式 1（USB 上网）并应用，模块重启后系统网络设置会出现 Baiwang 网卡：
    <img width="600" alt="截屏2026-09-09 13 33 35" src="https://github.com/user-attachments/assets/94341995-8153-4d57-ad28-247245fa1d06" />
+5. 若插入的是二代模块，软件会提示“仅网卡模式”：状态、短信、eSIM、AT 调试不可用。只有 macOS 在「系统设置 → 网络」中把 Baiwang 网卡识别出来并显示已连接时，才能在上网页查看网卡并把默认出口切到它（该能力尚待二代模块真机验证）。
 
 ## 技术说明
 
@@ -57,6 +62,7 @@ xcodebuild -project DJ4GHub.xcodeproj -scheme DJ4GHub test
 - 界面：SwiftUI `NavigationSplitView`；玻璃样式通过兼容层自动启用——macOS 26+ 用 `glassEffect`，旧系统回退到普通磨砂材质。
 - eSIM：SGP.22 ES10c 命令（STORE DATA 0x80/0xE2 + TLV），参考 lpac 实现。
 - 模块为数据向设计，不支持通话语音，因此不包含来电功能。
+- 一代模块（0x4006）支持完整管理；二代模块（0x4009）社区资料显示其封闭了 USB AT 管理口，本软件仅做识别与可能的纯网卡上网，不做未经验证的支持承诺。
 
 ## 路线图
 

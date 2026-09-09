@@ -119,17 +119,25 @@ enum SMSCodec {
 
     // MARK: - 解码
 
-    static func unpackSeptets(_ bytes: [UInt8], count: Int) -> [UInt8] {
+    static func unpackSeptets(_ bytes: [UInt8], count: Int, startBit: Int = 0) -> [UInt8] {
         var out: [UInt8] = []
-        var bitBuffer: UInt32 = 0
+        var bitBuffer: UInt64 = 0
         var bitCount = 0
         var index = 0
+        var remainingSkip = max(startBit, 0)
         while out.count < count {
-            while bitCount < 7, index < bytes.count {
-                bitBuffer |= UInt32(bytes[index]) << bitCount
+            // 带分段头时，正文可能从某个非整字节的位偏移开始，先把偏移位吞掉。
+            while bitCount < remainingSkip + 7, index < bytes.count {
+                bitBuffer |= UInt64(bytes[index]) << bitCount
                 bitCount += 8
                 index += 1
             }
+            if remainingSkip > 0 {
+                bitBuffer >>= remainingSkip
+                bitCount -= remainingSkip
+                remainingSkip = 0
+            }
+            guard bitCount >= 7 else { break }
             out.append(UInt8(bitBuffer & 0x7F))
             bitBuffer >>= 7
             bitCount -= 7
@@ -230,11 +238,23 @@ enum SMSCodec {
         pos += 7
         let udl = Int(bytes[pos])
         pos += 1
+        let hasUDH = (firstOctet & 0x40) != 0
         let coding = dcs & 0x0C
         let udByteCount = coding == 0x08 ? udl : (udl * 7 + 7) / 8
-        let ud = Array(bytes[pos ..< min(pos + max(udByteCount, 0), bytes.count)])
-        let text = decodeUserData(ud, dcs: dcs, udl: udl)
-        return SMSMessage(id: id, phoneNumber: sender, text: text, date: date, isRead: isRead, isIncoming: true)
+        let udEnd = min(pos + max(udByteCount, 0), bytes.count)
+        let ud = pos < udEnd ? Array(bytes[pos ..< udEnd]) : []
+        let text = decodeUserData(ud, dcs: dcs, udl: udl, hasUDH: hasUDH)
+        let concat = hasUDH ? parseConcatInfo(from: ud) : nil
+        return SMSMessage(
+            id: id,
+            phoneNumber: sender,
+            text: text,
+            date: date,
+            isRead: isRead,
+            isIncoming: true,
+            concat: concat,
+            rawHex: bytesToHex(bytes)
+        )
     }
 
     // MARK: - 地址与时间
@@ -318,12 +338,50 @@ enum SMSCodec {
         ]
     }
 
-    static func decodeUserData(_ bytes: [UInt8], dcs: UInt8, udl: Int) -> String {
+    /// 解析用户数据头（UDH）中的“长短信分片”信息。
+    /// 支持 8 位引用号（IEI 0x00）与 16 位引用号（IEI 0x08）两种格式。
+    static func parseConcatInfo(from ud: [UInt8]) -> SMSConcatInfo? {
+        guard let udhl = ud.first else { return nil }
+        let headerEnd = min(1 + Int(udhl), ud.count)
+        guard headerEnd >= 2 else { return nil }
+        var offset = 1
+        while offset + 1 < headerEnd {
+            let iei = ud[offset]
+            let length = Int(ud[offset + 1])
+            let dataStart = offset + 2
+            let dataEnd = dataStart + length
+            guard dataEnd <= headerEnd else { break }
+            let data = Array(ud[dataStart ..< dataEnd])
+            if iei == 0x00, length >= 3,
+               data[1] >= 1, data[2] >= 1, data[2] <= data[1] {
+                return SMSConcatInfo(
+                    reference: Int(data[0]),
+                    totalParts: Int(data[1]),
+                    partIndex: Int(data[2])
+                )
+            }
+            if iei == 0x08, length >= 4,
+               data[2] >= 1, data[3] >= 1, data[3] <= data[2] {
+                return SMSConcatInfo(
+                    reference: Int(data[0]) << 8 | Int(data[1]),
+                    totalParts: Int(data[2]),
+                    partIndex: Int(data[3])
+                )
+            }
+            offset = dataEnd
+        }
+        return nil
+    }
+
+    static func decodeUserData(_ bytes: [UInt8], dcs: UInt8, udl: Int, hasUDH: Bool = false) -> String {
         let coding = dcs & 0x0C
+        // 有分段头时，用户数据第一个字节是 UDHL，头部共占 UDHL+1 个字节。
+        let headerOctets = hasUDH ? (bytes.first.map { Int($0) + 1 } ?? 0) : 0
+        let bodyStart = min(headerOctets, bytes.count)
         if coding == 0x08 {
             // UCS2
             var utf16 = [UInt16]()
-            var index = 0
+            var index = bodyStart
             while index + 1 < bytes.count {
                 utf16.append(UInt16(bytes[index]) << 8 | UInt16(bytes[index + 1]))
                 index += 2
@@ -331,11 +389,22 @@ enum SMSCodec {
             return String(decoding: utf16, as: UTF16.self)
         } else if coding == 0x00 {
             // GSM 7-bit 默认字母表
-            let septets = unpackSeptets(bytes, count: udl)
+            var bodySeptets = udl
+            var startBit = 0
+            if headerOctets > 0 {
+                // 头部按字节数占用，但 7-bit 数据按 septet 计数；
+                // 头部之后还要补 0–6 位，使正文从下一个 septet 边界开始。
+                let headerSeptets = (headerOctets * 8 + 6) / 7
+                startBit = headerSeptets * 7 - headerOctets * 8
+                bodySeptets = max(udl - headerSeptets, 0)
+            }
+            // 先跳过头部整字节，再处理头尾的 0–6 个补位。
+            let bodyBytes = Array(bytes.dropFirst(headerOctets))
+            let septets = unpackSeptets(bodyBytes, count: bodySeptets, startBit: startBit)
             return decodeSeptets(septets)
         } else {
             // 8-bit 数据，尽量按 Latin-1 展示
-            return String(bytes: bytes, encoding: .isoLatin1) ?? ""
+            return String(bytes: bytes[bodyStart...], encoding: .isoLatin1) ?? ""
         }
     }
 

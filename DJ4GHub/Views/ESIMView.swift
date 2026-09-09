@@ -15,9 +15,11 @@ struct ESIMView: View {
                     profilesCard
                 } else {
                     EmptyStateView(
-                        icon: "simcard.slash",
-                        title: "模块未连接",
-                        message: "eSIM 功能需要模块处于管理模式（USB 模式 0）且插入兼容的 eUICC 卡片。"
+                        icon: appState.isGen2Only ? "simcard" : "simcard.slash",
+                        title: appState.isGen2Only ? "二代模块不支持 eSIM 管理" : "模块未连接",
+                        message: appState.isGen2Only
+                            ? "eSIM 管理需要走 USB AT 通道，二代模块已封闭该通道。"
+                            : "eSIM 功能需要模块处于管理模式（USB 模式 0）且插入兼容的 eUICC 卡片。"
                     )
                     .frame(maxWidth: .infinity)
                     .padding(.top, 80)

@@ -50,6 +50,11 @@ struct ContentView: View {
     @ViewBuilder
     private var detail: some View {
         VStack(spacing: 0) {
+            if appState.isGen2Only {
+                Gen2ModuleNotice()
+                    .padding([.horizontal, .top], 16)
+            }
+
             if let error = appState.lastError {
                 HStack(spacing: 8) {
                     Image(systemName: "exclamationmark.triangle.fill")
@@ -85,6 +90,7 @@ struct ContentView: View {
         switch appState.phase {
         case .connected: .green
         case .switching: .orange
+        case .gen2Only: .orange
         case .failed: .red
         case .searching: .secondary
         }
@@ -94,6 +100,7 @@ struct ContentView: View {
         switch appState.phase {
         case .connected: "模块已连接"
         case .switching: "模块切换中…"
+        case .gen2Only: "已识别二代模块"
         case .failed: "连接失败"
         case .searching: "等待模块…"
         }

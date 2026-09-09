@@ -50,12 +50,19 @@ struct MenuBarView: View {
         return switch appState.phase {
         case .connected: "模块已连接"
         case .switching: "模块切换中…"
+        case .gen2Only: "已识别二代模块"
         case .failed: "连接失败"
         case .searching: "等待模块…"
         }
     }
 
     private var detailText: String {
+        if appState.isGen2Only {
+            if appState.network.isAvailable {
+                return "管理口不可用 · 网卡 \(appState.network.activeInterface) 已就绪"
+            }
+            return "管理口不可用 · 等待系统识别网卡"
+        }
         if appState.status.usbNetMode >= 0 {
             return appState.status.usbNetModeDescription
         }
@@ -82,6 +89,7 @@ struct MenuBarView: View {
         return switch appState.phase {
         case .connected: .green
         case .switching: .orange
+        case .gen2Only: .orange
         case .failed: .red
         case .searching: .secondary
         }

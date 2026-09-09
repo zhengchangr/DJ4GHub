@@ -1,6 +1,27 @@
 import Foundation
 import CLibusb
 
+/// 大疆 4G 模块代际（按 USB 产品 ID 区分）。
+enum DJIModuleGeneration: Equatable, CaseIterable, Sendable {
+    case gen1
+    case gen2
+
+    /// 一代 2ca3:4006；二代 2ca3:4009。
+    var productID: UInt16 {
+        switch self {
+        case .gen1: return 0x4006
+        case .gen2: return 0x4009
+        }
+    }
+
+    var displayName: String {
+        switch self {
+        case .gen1: return "一代"
+        case .gen2: return "二代"
+        }
+    }
+}
+
 /// 通过 libusb 与大疆一代 4G 模块（USB 2ca3:4006）通信。
 /// 所有方法必须在同一条串行队列上调用（由 ModemSession 保证）。
 final class LibusbTransport: ModemTransport {
@@ -19,27 +40,34 @@ final class LibusbTransport: ModemTransport {
     // MARK: - 设备检测
 
     static func isDevicePresent() -> Bool {
+        presentGenerations().contains(.gen1)
+    }
+
+    /// 枚举当前插在 Mac 上的大疆 4G 模块代际。
+    static func presentGenerations() -> Set<DJIModuleGeneration> {
         var context: OpaquePointer?
-        guard libusb_init(&context) == 0, let context else { return false }
+        guard libusb_init(&context) == 0, let context else { return [] }
         defer { libusb_exit(context) }
 
         var list: UnsafeMutablePointer<OpaquePointer?>?
         let count = libusb_get_device_list(context, &list)
-        guard count > 0, let list else { return false }
+        guard count > 0, let list else { return [] }
         defer { libusb_free_device_list(list, 1) }
 
+        var found: Set<DJIModuleGeneration> = []
         for index in 0 ..< Int(count) {
             guard let device = list[index] else { continue }
             let pointer = UnsafeMutablePointer<libusb_device_descriptor>.allocate(capacity: 1)
             memset(pointer, 0, MemoryLayout<libusb_device_descriptor>.size)
             defer { pointer.deallocate() }
-            if libusb_get_device_descriptor(device, pointer) == 0,
-               pointer.pointee.idVendor == vendorID,
-               pointer.pointee.idProduct == productID {
-                return true
+            guard libusb_get_device_descriptor(device, pointer) == 0,
+                  pointer.pointee.idVendor == vendorID else { continue }
+            for generation in DJIModuleGeneration.allCases
+            where generation.productID == pointer.pointee.idProduct {
+                found.insert(generation)
             }
         }
-        return false
+        return found
     }
 
     // MARK: - ModemTransport

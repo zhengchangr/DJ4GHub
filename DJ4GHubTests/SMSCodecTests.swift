@@ -85,6 +85,39 @@ final class SMSCodecTests: XCTestCase {
         XCTAssertNotNil(message?.date)
     }
 
+    func testParseUCS2LongSMSSkipsUDH() {
+        // 中国移动 10086 发来的超长短信，UCS2 编码，这是 4 段中的第 2 段。
+        // 开头 6 个字节是“分片信息”（UDH），以前被误当成正文才出现 Ѐ̥Ё 乱码。
+        let hex = ("0891683108501416F04405A10180F60008326092008454238C050003250402"
+            + "00380036002E0063006E002F004100610057003700450051003F007300690064003D"
+            + "005A00490067005400750043004E00710068007100300020621651736CE8201C4E2D"
+            + "56FD79FB52A800310030003000380036201D5B9865B95FAE4FE1516C4F1753F74E8"
+            + "689E33002000D000A301000310030003051438BDD8D3930116BCF59297B7E5230")
+        let message = SMSCodec.parseDeliverPDU(hex: hex, id: 9, isRead: false)
+        XCTAssertNotNil(message)
+        XCTAssertEqual(message?.phoneNumber, "10086")
+        XCTAssertEqual(message?.concat?.totalParts, 4)
+        XCTAssertEqual(message?.concat?.partIndex, 2)
+        // 正文直接以网址片段开头，不再包含被误解码的分段头乱码。
+        XCTAssertTrue(message?.text.hasPrefix("86.cn/AaW7EQ?sid=") ?? false)
+        XCTAssertFalse(message?.text.contains("Ѐ̥Ё") ?? true)
+    }
+
+    func testParseGSM7LongSMSSkipsUDHWithPadding() {
+        // 真实手机收到的 GSM 7-bit 超长短信（2 段中的第 1 段）。
+        // 6 字节分片头之后还有 1 个补位，正文从第 49 个 bit 才开始。
+        let hex = ("0791947106004034440F8900947166020918F6000060506151649080A005000384"
+            + "020190ED362B3D4683CCF2721DD44E8FD1A0707D8C0EA1C362503B2D07D9DF7274DA0D"
+            + "9281E0E1B01C341FA3EBE832E85C5E87EB66BACBE55ABFDBED391D442EBBDD20FB5B1E"
+            + "76FFEE6F36BBEC06DDD3721039EC7683DA6FF9B9EC0689D36C76584E06CDE1E932BBE"
+            + "CFEA1C36210393D4683D8E9B21854779341F6379B0D5A97D36E90F83D5E83CE")
+        let message = SMSCodec.parseDeliverPDU(hex: hex, id: 10, isRead: false)
+        XCTAssertNotNil(message)
+        XCTAssertEqual(message?.concat?.totalParts, 2)
+        XCTAssertEqual(message?.concat?.partIndex, 1)
+        XCTAssertTrue(message?.text.hasPrefix("Hmm,ich freu mich auch!") ?? false)
+    }
+
     func testParseCMGLRealCRLFFormat() {
         let hex = "079144872000302320048102020000625061028204401AD9775D0E72D7DBE2B21C949E8360B75A4E7683D16AB71B"
         // 真机响应使用 \r\n 行尾，且 status 1=已读、0=未读

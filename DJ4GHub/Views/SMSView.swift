@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 struct SMSView: View {
@@ -13,9 +14,11 @@ struct SMSView: View {
                 messageList
             } else {
                 EmptyStateView(
-                    icon: "message.slash",
-                    title: "模块未连接",
-                    message: "短信需要模块处于管理模式（USB 模式 0）。"
+                    icon: appState.isGen2Only ? "simcard" : "message.slash",
+                    title: appState.isGen2Only ? "二代模块不支持短信" : "模块未连接",
+                    message: appState.isGen2Only
+                        ? "二代模块封闭了 USB 管理口，短信收发功能不可用。"
+                        : "短信需要模块处于管理模式（USB 模式 0）。"
                 )
                 .frame(maxWidth: .infinity)
             }
@@ -62,6 +65,12 @@ struct SMSView: View {
                     ForEach(appState.messages) { message in
                         messageRow(message)
                             .contextMenu {
+                                Button {
+                                    NSPasteboard.general.clearContents()
+                                    NSPasteboard.general.setString(message.rawHex, forType: .string)
+                                } label: {
+                                    Label("复制原始数据（排查乱码用）", systemImage: "doc.on.doc")
+                                }
                                 Button(role: .destructive) {
                                     Task { await appState.deleteSMS(at: message.id) }
                                 } label: {
@@ -83,6 +92,14 @@ struct SMSView: View {
                         .foregroundStyle(.secondary)
                     Text(message.phoneNumber.isEmpty ? "未知号码" : message.phoneNumber)
                         .font(.callout.weight(.semibold))
+                    if let concat = message.concat {
+                        Text("第 \(concat.partIndex)/\(concat.totalParts) 段")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(.quaternary.opacity(0.7), in: Capsule())
+                    }
                     Spacer()
                     if !message.isRead {
                         Circle()

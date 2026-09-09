@@ -40,7 +40,7 @@ struct DJ4GHubApp: App {
         return switch appState.phase {
         case .connected: "antenna.radiowaves.left.and.right"
         case .switching: "arrow.triangle.2.circlepath"
-        case .failed, .searching: "simcard"
+        case .failed, .searching, .gen2Only: "simcard"
         }
     }
 

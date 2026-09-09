@@ -13,6 +13,8 @@ struct InternetView: View {
                     networkCard
                     trafficCard
                     tipsCard
+                } else if appState.isGen2Only {
+                    gen2OnlyCard
                 } else {
                     EmptyStateView(
                         icon: "network.slash",
@@ -73,6 +75,18 @@ struct InternetView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+        }
+    }
+
+    /// 二代模块没有 USB 管理口时的“纯网卡”展示。
+    private var gen2OnlyCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text("二代模块封闭了 USB 管理口，因此无法由本软件切换上网模式；以下只反映 macOS 是否把它识别成网卡。若「系统设置 → 网络」中能看到 Baiwang 并处于已连接，即可把默认出口切到它来上网。")
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            networkCard
+            trafficCard
         }
     }
 

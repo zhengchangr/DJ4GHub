@@ -21,10 +21,21 @@ struct ATConsoleView: View {
     ]
 
     var body: some View {
-        VStack(spacing: 0) {
-            inputBar
-            Divider()
-            logList
+        Group {
+            if appState.isGen2Only {
+                EmptyStateView(
+                    icon: "terminal",
+                    title: "二代模块不支持 AT 调试",
+                    message: "AT 指令需要访问模块的 USB 管理口，二代模块已封闭该通道。"
+                )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                VStack(spacing: 0) {
+                    inputBar
+                    Divider()
+                    logList
+                }
+            }
         }
     }
 

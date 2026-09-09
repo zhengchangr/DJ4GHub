@@ -31,9 +31,11 @@ struct StatusView: View {
                     }
                 } else {
                     EmptyStateView(
-                        icon: "cable.connector.slash",
-                        title: "等待模块接入",
-                        message: "请将大疆一代 4G 模块通过支持数据传输的 USB-C 线连接到 Mac，并插入 SIM 卡。"
+                        icon: appState.isGen2Only ? "simcard" : "cable.connector.slash",
+                        title: appState.isGen2Only ? "二代模块已识别" : "等待模块接入",
+                        message: appState.isGen2Only
+                            ? "二代模块封闭了 USB 管理口，无法读取运营商、信号、IMEI、手机号、固件等状态。请切换到「上网」页查看它是否被系统识别为网卡。"
+                            : "请将大疆一代 4G 模块通过支持数据传输的 USB-C 线连接到 Mac，并插入 SIM 卡。"
                     )
                     .frame(maxWidth: .infinity)
                     .padding(.top, 80)
