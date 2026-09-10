@@ -8,7 +8,7 @@
 
 状态 · 短信 · eSIM · USB 上网 · AT 调试
 
-[⬇️ 下载测试版](https://github.com/zhengchangr/dji-4g-manager/releases)
+[⬇️ 下载最新版](https://github.com/zhengchangr/dji-4g-manager/releases)
 
 </div>
 
@@ -49,7 +49,7 @@ English: DJI 4G Manager is an independent open-source utility for macOS that tal
 2. 将 `DJI4GManager.app` 拖入“应用程序”或直接双击运行；
 3. 若 macOS 提示“无法验证开发者”，请右键 `DJI4GManager.app` → 打开。
 
-> 当前为测试版：使用临时签名、未做 Apple Developer ID 公证，建议在测试机上使用。
+> 当前版本 0.2.2：使用临时签名、未做 Apple Developer ID 公证，首次打开可能需要在「系统设置 → 隐私与安全性」中允许。
 
 ## 使用
 
@@ -101,7 +101,7 @@ xcodebuild -project DJI4GManager.xcodeproj -scheme DJI4GManager test
 - [x] 菜单栏快捷入口与实时网速
 - [x] 真机验证 USB/AT 通信与模式切换
 - [ ] eSIM Profile 下载（SM-DP+ 激活码）
-- [ ] 开发者签名（Developer ID + 公证）后正式发布
+- [ ] Apple 开发者签名与公证（消除首次打开的拦截提示）
 
 ## 许可
 
